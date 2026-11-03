@@ -1,0 +1,301 @@
+{
+  "info": {
+    "name": "蓝天白云问答社区 API",
+    "description": "问答社区后端全部接口测试集合。使用步骤：1) 先执行「用户认证/注册」和「登录」，token 会自动写入集合变量；2) 后续接口自动携带 token。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "用户认证",
+      "item": [
+        {
+          "name": "注册",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.token) { pm.collectionVariables.set('token', data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "登录",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.token) { pm.collectionVariables.set('token', data.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "问题",
+      "item": [
+        {
+          "name": "发布问题",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/questions", "host": ["{{baseUrl}}"], "path": ["api", "questions"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"如何在 React 中实现蓝天白云主题的卡片组件？\",\n  \"content\": \"## 问题描述\\n\\n我想用 **Tailwind CSS** 实现一个蓝天白云风格的卡片，求推荐配色方案。\\n\\n```css\\n.card { border-radius: 1rem; }\\n```\",\n  \"tags\": [\"React\", \"Tailwind\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "问题列表-最新",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions?sort=latest&page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "questions"],
+              "query": [
+                { "key": "sort", "value": "latest" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "问题列表-热门",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions?sort=hot&page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "questions"],
+              "query": [
+                { "key": "sort", "value": "hot" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "问题列表-未解决+标签筛选+搜索",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions?sort=unsolved&tag=React&keyword=蓝天&page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "questions"],
+              "query": [
+                { "key": "sort", "value": "unsolved" },
+                { "key": "tag", "value": "React" },
+                { "key": "keyword", "value": "蓝天" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "问题详情",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/questions/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1"] }
+          }
+        },
+        {
+          "name": "更新问题",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/questions/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"【已更新】如何在 React 中实现蓝天白云主题卡片？\",\n  \"content\": \"## 更新后的问题描述\\n\\n补充：希望卡片有云朵装饰。\",\n  \"tags\": [\"React\", \"Tailwind\", \"UI\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "删除问题",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/questions/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "回答",
+      "item": [
+        {
+          "name": "提交回答",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/questions/1/answers", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1", "answers"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"推荐用 `bg-gradient-to-b from-sky-50 to-sky-100` 做背景，卡片用 `bg-white rounded-2xl shadow`，主色用 `sky-400`。\"\n}"
+            }
+          }
+        },
+        {
+          "name": "获取问题全部回答",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/questions/1/answers", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1", "answers"] }
+          }
+        },
+        {
+          "name": "修改回答",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/questions/1/answers/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1", "answers", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"【已修改】补充：文字用 `slate-700`，标签用 `bg-sky-100 text-sky-600`。\"\n}"
+            }
+          }
+        },
+        {
+          "name": "采纳最佳答案",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/questions/1/answers/1/accept", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1", "answers", "1", "accept"] }
+          }
+        },
+        {
+          "name": "删除回答",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/questions/1/answers/1", "host": ["{{baseUrl}}"], "path": ["api", "questions", "1", "answers", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "点赞",
+      "item": [
+        {
+          "name": "点赞/取消点赞-问题",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/votes", "host": ["{{baseUrl}}"], "path": ["api", "votes"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_type\": \"question\",\n  \"target_id\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "点赞/取消点赞-回答",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/votes", "host": ["{{baseUrl}}"], "path": ["api", "votes"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_type\": \"answer\",\n  \"target_id\": 1\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "用户个人中心",
+      "item": [
+        {
+          "name": "获取当前用户信息",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] }
+          }
+        },
+        {
+          "name": "编辑个人信息",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api", "users", "me"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"avatar\": \"https://api.dicebear.com/7.x/adventurer/svg?seed=testuser\"\n}"
+            }
+          }
+        },
+        {
+          "name": "我的提问",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/questions?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "me", "questions"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "我的回答",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/answers?page=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "me", "answers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

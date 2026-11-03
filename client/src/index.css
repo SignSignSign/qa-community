@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply min-h-screen bg-gradient-to-b from-sky-50 via-sky-100/60 to-sky-50 text-slate-700 antialiased;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-sky-200;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-sky-300;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Markdown 渲染细节微调 */
+.prose img {
+  @apply rounded-xl;
+}
+.prose pre {
+  @apply rounded-xl border border-sky-100 bg-slate-50;
+}
+.prose code {
+  @apply rounded bg-sky-50 px-1 py-0.5 text-sky-600 before:content-none after:content-none;
+}
